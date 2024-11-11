@@ -1,6 +1,4 @@
 const axios = require('axios');
-const path = require('path');
-const fs = require('fs');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
@@ -21,7 +19,7 @@ module.exports.config = {
   selfListen: false,
 };
 
-module.exports.run = async function({ event, args}) {
+module.exports.run = async function({ event, args }) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     return;
   }
@@ -37,25 +35,17 @@ module.exports.run = async function({ event, args}) {
     }
   }
 
-  const commandsPath = path.join(__dirname, "../commands");
-  const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter((file) => file.endsWith(".js"));
+const command_name = ["eval", "flux", "help", "id", "music", "shoti"]; 
+const huys = command_name.map(cmd => cmd + args[0].toLowerCase());
 
-  const isMatchingCommand = args.length > 0 && isNaN(args[0]) && commandFiles.some(file => {
-    const commandName = file.replace('.js', '');
-    const command = require(path.join(commandsPath, file));
-    return commandName === args[0].toLowerCase() && command.config.name === messageText;
-  });
-
-  if (!regEx_tiktok.test(messageText) &&
-      !facebookLinkRegex.test(messageText) &&
-      !instagramLinkRegex.test(messageText) &&
-      !youtubeLinkRegex.test(messageText) &&
-      !spotifyLinkRegex.test(messageText) &&
-      !soundcloudRegex.test(messageText) &&
-      !capcutLinkRegex.test(messageText) &&
-      !isMatchingCommand) {
+if (!regEx_tiktok.test(messageText) &&
+    !facebookLinkRegex.test(messageText) &&
+    !instagramLinkRegex.test(messageText) &&
+    !youtubeLinkRegex.test(messageText) &&
+    !spotifyLinkRegex.test(messageText) &&
+    !soundcloudRegex.test(messageText) &&
+    !capcutLinkRegex.test(messageText) &&
+    !huys.includes(messageText)) {
     try {
       let text;
       const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}${imageUrl ? `&file_url=${encodeURIComponent(imageUrl)}` : ''}`;
