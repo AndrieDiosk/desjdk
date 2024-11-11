@@ -21,7 +21,7 @@ module.exports.config = {
   selfListen: false,
 };
 
-module.exports.run = async function({ event, args, api }) {
+module.exports.run = async function({ event, args}) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     return;
   }
