@@ -1,4 +1,6 @@
 const axios = require('axios');
+const path = require('path');
+const fs = require('fs');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
@@ -10,8 +12,6 @@ const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
 };
-const fs = require('fs');
-const path = require('path');
 
 module.exports.config = {
   name: 'gemini',
@@ -21,7 +21,7 @@ module.exports.config = {
   selfListen: false,
 };
 
-module.exports.run = async function({ event, args }) {
+module.exports.run = async function({ event, args, api }) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     return;
   }
@@ -37,29 +37,25 @@ module.exports.run = async function({ event, args }) {
     }
   }
 
+  const commandsPath = path.join(__dirname, "../commands");
+  const commandFiles = fs
+    .readdirSync(commandsPath)
+    .filter((file) => file.endsWith(".js"));
+
+  const isMatchingCommand = args.length > 0 && isNaN(args[0]) && commandFiles.some(file => {
+    const commandName = file.replace('.js', '');
+    const command = require(path.join(commandsPath, file));
+    return commandName === args[0].toLowerCase() && command.config.name === messageText;
+  });
+
   if (!regEx_tiktok.test(messageText) &&
       !facebookLinkRegex.test(messageText) &&
       !instagramLinkRegex.test(messageText) &&
       !youtubeLinkRegex.test(messageText) &&
       !spotifyLinkRegex.test(messageText) &&
       !soundcloudRegex.test(messageText) &&
-      !capcutLinkRegex.test(messageText)) {
-
-    const commandsPath = path.join(__dirname, "../commands");
-    const commandFiles = fs
-      .readdirSync(commandsPath)
-      .filter((file) => file.endsWith(".js"));
-
-    if (args.length > 0 && isNaN(args[0])) {
-      const commandName = args[0].toLowerCase();
-      const commandFile = commandFiles.find(file => file.replace('.js', '') === commandName);
-
-      if (commandFile) {
-        const command = require(path.join(commandsPath, commandFile));
-        command.config.name(messageText);
-      }
-    }
-
+      !capcutLinkRegex.test(messageText) &&
+      !isMatchingCommand) {
     try {
       let text;
       const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}${imageUrl ? `&file_url=${encodeURIComponent(imageUrl)}` : ''}`;
