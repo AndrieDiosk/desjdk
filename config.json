@@ -1,0 +1,20 @@
+{
+  "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI",
+  "VERIFY_TOKEN": "kupal",
+  "ADMINS": [
+    "25532987236345562"
+  ],
+  "BOTNAME": "Tropp",
+  "PREFIX": "/",
+  "THEME_SETUP": {
+    "THEME": "Fiery",
+    "ADMIN": "Cliffvincentt",
+    "TITLE": "TROPP",
+    "HTML": [
+      "#CE2F16",
+      "#fe8916",
+      "#ff952a"
+    ]
+  },
+  "selfListen": false
+}
