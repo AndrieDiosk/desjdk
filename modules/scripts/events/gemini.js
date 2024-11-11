@@ -36,7 +36,7 @@ module.exports.run = async function({ event, args }) {
   }
 
 const command_name = ["eval", "flux", "help", "id", "music", "shoti"]; 
-const huys = command_name.map(cmd => cmd + args[0].toLowerCase());
+const huys = command_name.map(cmd => cmd + args.join(' '));
 
 if (!regEx_tiktok.test(messageText) &&
     !facebookLinkRegex.test(messageText) &&
