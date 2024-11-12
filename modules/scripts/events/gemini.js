@@ -29,13 +29,13 @@ module.exports.run = async function({ event, args }) {
 
   let fileUrl = '';
 
-  if (event.type === 'message_reply' && event.attachments && event.attachments[0]?.type === "image") {
-    fileUrl = encodeURIComponent(event.attachments[0].url);
+  if (event.type === 'message_reply' && event.attachments) {
+    fileUrl = encodeURIComponent(event.attachments);
   }
 
   const command_name = ["eval", "flux", "help", "id", "music", "shoti"];
-  const kupal = args.join(' ').trim();
-  const huys = command_name.flatMap(cmd => [cmd.toLowerCase() + kupal, cmd.toUpperCase() + kupal]);
+const kupal = command_name ? command_name.join(' ') : [];
+const huys = command_name.flatMap(cmd => [cmd.toLowerCase() + kupal, cmd.toUpperCase() + kupal]);
 
   if (
     !regEx_tiktok.test(messageText) &&
@@ -45,17 +45,23 @@ module.exports.run = async function({ event, args }) {
     !spotifyLinkRegex.test(messageText) &&
     !soundcloudRegex.test(messageText) &&
     !capcutLinkRegex.test(messageText) &&
-    !huys.includes(messageText.trim())
+    !huys.includes(messageText)
   ) {
     try {
       let text;
-      const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}${fileUrl ? `&file_url=${encodeURIComponent(fileUrl)}` : ''}`;
-      const response = await axios.get(apiUrl, { headers });
-      text = response.data.message;
+      if (fileUrl) {
+        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${fileUrl}`;
+        const response = await axios.get(apiUrl, { headers });
+        text = response.data.message;
+      } else {
+        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+        const response = await axios.get(apiUrl, { headers });
+        text = response.data.message;
+      }
 
       api.sendMessage(text, senderId);
     } catch (error) {
-      console.error('Error fetching response:', error);
+      api.sendMessage('Error response:\t\t' + error, senderId);
     }
   }
 };
