@@ -66,6 +66,12 @@ const shoti = commandShoti ? commandShoti.split(' ') : [];
 const commandShotiUpper = "Shoti";
 const Shoti = commandShotiUpper ? commandShotiUpper.split(' ') : []; **/
 
+const god = "who is jesus?";
+const teach = "can you teach me";
+const intro = "Can you tell me more about yourself?";
+const owner = "who is your owner?";
+const api =  "what is your api?";
+
 if (
   !regEx_tiktok.test(messageText) &&
   !facebookLinkRegex.test(messageText) &&
@@ -85,7 +91,12 @@ if (
   !messageText.match(/^music(\s+.*)?$/i) && 
   !messageText.match(/^Music(\s+.*)?$/i) && 
   !messageText.match(/^shoti(\s+.*)?$/i) && 
-  !messageText.match(/^Shoti(\s+.*)?$/i)
+  !messageText.match(/^Shoti(\s+.*)?$/i) && 
+  god !== messageText &&
+  teach !== messageText &&
+  intro !== messageText &&
+  owner !== messageText &&
+  api !== messageText
 ) {
     try {
       let text;
@@ -101,7 +112,7 @@ if (
 
       api.sendMessage(text, senderId);
     } catch (error) {
-      api.sendMessage('Error response:\t\t' + error, senderId);
+      api.sendMessage('Error response:\t' + error, senderId);
     }
   }
 };
