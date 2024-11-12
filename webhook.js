@@ -6,9 +6,9 @@ module.exports.listen = function (event) {
     if (event.object === "page") {
       event.entry.forEach((entry) => {
         entry.messaging.forEach(async (event) => {
-          if (event.postback && event.postback.payload) {
+         /** if (event.postback && event.postback.payload) {
  await utils.handlePayload(event.postback.payload, event.sender.id);
-          }
+          } **/
 
           event.type = await utils.getEventType(event);
 

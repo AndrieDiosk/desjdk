@@ -26,34 +26,36 @@ module.exports.run = async function({ event, args }) {
 
   const messageText = event.message.text;
   const senderId = event.sender.id;
-  let imageUrl = '';
 
-  if (event.type === 'message_reply' && event.message.reply_to && event.message.reply_to.attachments) {
-    const imageAttachment = event.message.reply_to.attachments.find(att => att.type === 'image');
-    if (imageAttachment && imageAttachment.payload && imageAttachment.payload.url) {
-      imageUrl = imageAttachment.payload.url;
-    }
+  let fileUrl = '';
+
+  if (event.type === 'message_reply' && event.attachments && event.attachments[0]?.type === "image") {
+    fileUrl = encodeURIComponent(event.attachments[0].url);
   }
 
-const command_name = ["eval", "flux", "help", "id", "music", "shoti"]; 
-const huys = command_name.map(cmd => cmd + args.join(' '));
+  const command_name = ["eval", "flux", "help", "id", "music", "shoti"];
+  const kupal = args.join(' ').trim();
+  const huys = command_name.flatMap(cmd => [cmd.toLowerCase() + kupal, cmd.toUpperCase() + kupal]);
 
-if (!regEx_tiktok.test(messageText) &&
+  if (
+    !regEx_tiktok.test(messageText) &&
     !facebookLinkRegex.test(messageText) &&
     !instagramLinkRegex.test(messageText) &&
     !youtubeLinkRegex.test(messageText) &&
     !spotifyLinkRegex.test(messageText) &&
     !soundcloudRegex.test(messageText) &&
     !capcutLinkRegex.test(messageText) &&
-    !huys.includes(messageText)) {
+    !huys.includes(messageText.trim())
+  ) {
     try {
       let text;
-      const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}${imageUrl ? `&file_url=${encodeURIComponent(imageUrl)}` : ''}`;
+      const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}${fileUrl ? `&file_url=${encodeURIComponent(fileUrl)}` : ''}`;
       const response = await axios.get(apiUrl, { headers });
       text = response.data.message;
 
       api.sendMessage(text, senderId);
     } catch (error) {
+      console.error('Error fetching response:', error);
     }
   }
 };

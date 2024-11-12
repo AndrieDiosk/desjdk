@@ -58,10 +58,10 @@ async function log(event) {
   }
 }
 
-function handlePayload(payload, senderID) {
+function handlePayload(payload, senderId) {
   if (payload === "GET_STARTED_PAYLOAD") {
-    api.sendMessage("Welcome! I'm here to help you.", senderID);
-    api.sendMessage("Type 'help' to see what I can do.", senderID);
+    api.sendMessage("Welcome! I'm here to help you.", senderId);
+    api.sendMessage("Type 'help' to see what I can do.", senderId);
   }
 }
 
