@@ -35,7 +35,7 @@ module.exports = async function (event) {
           continue; // Skip if the command requires prefix but it's not used
         }
       } else {
-        commandName = rawCommandName.shift()?.toLowerCase();
+        commandName = rawCommandName.toLowerCase();
 
         // Notify the user that the command doesn't need a prefix if they used one
         if (rawCommandName.startsWith(config.PREFIX + command.config.name) && !command.config.usePrefix) {
@@ -45,12 +45,12 @@ module.exports = async function (event) {
       }
 
       // Check if the command is admin-only and if the sender is an admin
-      if (commandName === command.config.name.shift()?.toLowerCase() && command.config.adminOnly && !isAdmin) {
+      if (commandName === command.config.name.toLowerCase() && command.config.adminOnly && !isAdmin) {
         api.sendMessage("You do not have permission to use this command.", event.sender.id);
         continue;
       }
 
-      if (command.config.name.shift()?.toLowerCase() === commandName) {
+      if (command.config.name.toLowerCase() === commandName) {
         const cooldownTime = command.config.cooldown || 0; // Default to 0 seconds if cooldown is not set
         const userCooldown = cooldowns[event.sender.id] || {};
         const lastUsed = userCooldown[command.config.name] || 0;

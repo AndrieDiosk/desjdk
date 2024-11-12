@@ -41,7 +41,7 @@ module.exports.run = async function({ event, args}) {
             },
             {
               content_type: "text",
-              title: "Help",
+              title: "help",
               payload: "HELP"
             }
           ]
