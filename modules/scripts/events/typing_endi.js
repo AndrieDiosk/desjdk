@@ -1,5 +1,5 @@
 module.exports.config = {
-  name: 'typing',
+  name: 'typing_endi',
   author: 'Cliff',
   version: '1.0',
   description: 'Automatically typing indicator',

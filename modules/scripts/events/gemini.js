@@ -29,24 +29,64 @@ module.exports.run = async function({ event, args }) {
 
   let fileUrl = '';
 
-  if (event.type === 'message_reply' && event.attachments) {
-    fileUrl = encodeURIComponent(event.attachments);
-  }
+  if (event && event.type === 'message_reply') {
+    const kupal = event.reply_to ? event.reply_to.attachments : [];
+    fileUrl = encodeURIComponent(kupal);
+}
 
-  const command_name = ["eval", "flux", "help", "id", "music", "shoti"];
-const kupal = command_name ? command_name.join(' ') : [];
-const huys = command_name.flatMap(cmd => [cmd.toLowerCase() + kupal, cmd.toUpperCase() + kupal]);
 
-  if (
-    !regEx_tiktok.test(messageText) &&
-    !facebookLinkRegex.test(messageText) &&
-    !instagramLinkRegex.test(messageText) &&
-    !youtubeLinkRegex.test(messageText) &&
-    !spotifyLinkRegex.test(messageText) &&
-    !soundcloudRegex.test(messageText) &&
-    !capcutLinkRegex.test(messageText) &&
-    !huys.includes(messageText)
-  ) {
+
+/**const commandEval = "eval";
+const eval = commandEval ? commandEval.split(' ') : [];
+const commandEvalUpper = "Eval";
+const Eval = commandEvalUpper ? commandEvalUpper.split(' ') : [];
+
+const commandHelp = "help";
+const help = commandHelp ? commandHelp.split(' ') : [];
+const commandHelpUpper = "Help";
+const Help = commandHelpUpper ? commandHelpUpper.split(' ') : [];
+
+const commandFlux = "flux";
+const flux = commandFlux ? commandFlux.split(' ') : [];
+const commandFluxUpper = "Flux";
+const Flux = commandFluxUpper ? commandFluxUpper.split(' ') : [];
+
+const commandId = "id";
+const id = commandId ? commandId.split(' ') : [];
+const commandIdUpper = "Id";
+const Id = commandIdUpper ? commandIdUpper.split(' ') : [];
+
+const commandMusic = "music";
+const music = commandMusic ? commandMusic.split(' ') : [];
+const commandMusicUpper = "Music";
+const Music = commandMusicUpper ? commandMusicUpper.split(' ') : [];
+
+const commandShoti = "shoti";
+const shoti = commandShoti ? commandShoti.split(' ') : [];
+const commandShotiUpper = "Shoti";
+const Shoti = commandShotiUpper ? commandShotiUpper.split(' ') : []; **/
+
+if (
+  !regEx_tiktok.test(messageText) &&
+  !facebookLinkRegex.test(messageText) &&
+  !instagramLinkRegex.test(messageText) &&
+  !youtubeLinkRegex.test(messageText) &&
+  !spotifyLinkRegex.test(messageText) &&
+  !soundcloudRegex.test(messageText) &&
+  !capcutLinkRegex.test(messageText) &&
+  !messageText.match(/^eval(\s+.*)?$/i) &&
+  !messageText.match(/^Eval(\s+.*)?$/i) &&
+  !messageText.match(/^help(\s+.*)?$/i) &&
+  !messageText.match(/^Help(\s+.*)?$/i) &&
+  !messageText.match(/^flux(\s+.*)?$/i) &&
+  !messageText.match(/^Flux(\s+.*)?$/i) &&
+  !messageText.match(/^id(\s+.*)?$/i) &&
+  !messageText.match(/^Id(\s+.*)?$/i) && 
+  !messageText.match(/^music(\s+.*)?$/i) && 
+  !messageText.match(/^Music(\s+.*)?$/i) && 
+  !messageText.match(/^shoti(\s+.*)?$/i) && 
+  !messageText.match(/^Shoti(\s+.*)?$/i)
+) {
     try {
       let text;
       if (fileUrl) {
