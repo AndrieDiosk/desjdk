@@ -29,9 +29,11 @@ module.exports.run = async function({ event, args }) {
 
   let fileUrl = '';
 
-  if (event && event.type === 'message_reply') {
-    const kupal = event.reply_to ? event.reply_to.attachments : [];
-    fileUrl = encodeURIComponent(kupal);
+if (event?.type === 'message_reply' && event.message && event.message.reply_to && event.message.reply_to.mid && event.message.attachments && event.message.attachments[0].type === 'image') {
+  const attachment = event.message.attachments[0]?.payload?.url;
+  if (attachment) {
+    fileUrl = attachment;
+  }
 }
 
 const god = "who is jesus?";
@@ -40,18 +42,34 @@ const intro = "Can you tell me more about yourself?";
 const owner = "who is your owner?";
 const apis =  "what is your api?";
 
-if (
-  !regEx_tiktok.test(messageText) &&
-  !facebookLinkRegex.test(messageText) &&
-  !instagramLinkRegex.test(messageText) &&
-  !youtubeLinkRegex.test(messageText) &&
-  !spotifyLinkRegex.test(messageText) &&
-  !soundcloudRegex.test(messageText) &&
-  !capcutLinkRegex.test(messageText) && !messageText.match(/^eval(\s+.*)?$/i) && !messageText.match(/^Eval(\s+.*)?$/i) && !messageText.match(/^help(\s+.*)?$/i) && !messageText.match(/^Help(\s+.*)?$/i) && !messageText.match(/^flux(\s+.*)?$/i) && !messageText.match(/^Flux(\s+.*)?$/i) && !messageText.match(/^id(\s+.*)?$/i) && !messageText.match(/^Id(\s+.*)?$/i) && !messageText.match(/^music(\s+.*)?$/i) && !messageText.match(/^Music(\s+.*)?$/i) && !messageText.match(/^shoti(\s+.*)?$/i) && !messageText.match(/^Shoti(\s+.*)?$/i) && god !== messageText &&
-  teach !== messageText &&
-  intro !== messageText &&
-  owner !== messageText &&
-  apis !== messageText) {
+ if (
+    !regEx_tiktok.test(messageText) &&
+    !facebookLinkRegex.test(messageText) &&
+    !instagramLinkRegex.test(messageText) &&
+    !youtubeLinkRegex.test(messageText) &&
+    !spotifyLinkRegex.test(messageText) &&
+    !soundcloudRegex.test(messageText) &&
+    !capcutLinkRegex.test(messageText) &&
+    !messageText.match(/^eval\s+.+;/i) &&
+    !messageText.match(/^Eval\s+.+;/i) &&
+    !messageText.match(/^help(\s+.+)?$/i) &&
+    !messageText.match(/^Help(\s+.+)?$/i) &&
+    !messageText.match(/^flux(\s+.+)?$/i) &&
+    !messageText.match(/^imagine(\s+.+)?$/i) &&
+    !messageText.match(/^Imagine(\s+.+)?$/i) &&
+    !messageText.match(/^Flux(\s+.+)?$/i) &&
+    !messageText.match(/^id(\s+.+)?$/i) &&
+    !messageText.match(/^Id(\s+.+)?$/i) &&
+    !messageText.match(/^music(\s+.+)?$/i) &&
+    !messageText.match(/^Music(\s+.+)?$/i) &&
+    !messageText.match(/^shoti(\s+.+)?$/i) &&
+    !messageText.match(/^Shoti(\s+.+)?$/i) &&
+    god !== messageText &&
+    teach !== messageText &&
+    intro !== messageText &&
+    owner !== messageText &&
+    apis !== messageText
+  ) {
     try {
       let text;
       if (fileUrl) {
@@ -68,5 +86,5 @@ if (
     } catch (error) {
       api.sendMessage(error, senderId);
     }
-  }
+}
 };

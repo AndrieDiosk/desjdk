@@ -2,23 +2,44 @@ const fs = require("fs");
 const path = require("path");
 const config = require("../config.json");
 const { getTheme } = require("../website/web.js");
-const cooldowns = {}; // Track cooldowns for each user and command
+const cooldowns = {};
+
+const bannedKeywords = [  'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
+  'shit', 'bitch', 'hentai', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
+  'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
+  'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
+  'ahegao', 'dildo', 'vibrator', 'asses', 'butt', 'asshole', 'cleavage', 'arse', 'dic', 'puss'];
+
+function escapeRegex(keyword) {
+  return keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 module.exports = async function (event) {
   const modulesPath = path.join(__dirname, "../modules/scripts/commands");
   const eventsPath = path.join(__dirname, "../modules/scripts/events");
   const commandFiles = fs.readdirSync(modulesPath).filter(file => file.endsWith(".js"));
 
-  // Check if the sender is an admin
   const isAdmin = config.ADMINS.includes(event.sender.id);
 
   if (event?.message?.is_echo) {
     event.sender.id = event.recipient.id;
   }
 
-  // Extract command text and arguments from the event
   const messageText = event.message?.text || event.postback?.title || "";
   const [rawCommandName, ...args] = messageText.split(" ");
+
+  const containsBannedKeyword = bannedKeywords.some(keyword => {
+    const pattern = new RegExp(`\\b${escapeRegex(keyword)}\\b`, 'i');
+    return pattern.test(messageText);
+  });
+
+  if (containsBannedKeyword) {
+    await api.graph({
+      recipient: { id: event.sender.id },
+      message: { text: '🚫 Your prompt contains inappropriate content. Please try again with a different prompt.' }
+    });
+    return;
+  }
 
   for (const file of commandFiles) {
     const commandPath = path.join(modulesPath, file);
@@ -27,43 +48,38 @@ module.exports = async function (event) {
     if (command && command.config && typeof command.config.name === "string") {
       let commandName;
 
-      // Check if the command requires a prefix
       if (command.config.usePrefix) {
         if (rawCommandName.startsWith(config.PREFIX)) {
           commandName = rawCommandName.slice(config.PREFIX.length).toLowerCase();
         } else {
-          continue; // Skip if the command requires prefix but it's not used
+          continue;
         }
       } else {
         commandName = rawCommandName.toLowerCase();
 
-        // Notify the user that the command doesn't need a prefix if they used one
         if (rawCommandName.startsWith(config.PREFIX + command.config.name) && !command.config.usePrefix) {
           api.sendMessage(`The "${command.config.name}" command does not require a prefix. Please try again without it.`, event.sender.id);
-          continue;  // Skip execution of this command if prefix is used unnecessarily
+          continue;
         }
       }
 
-      // Check if the command is admin-only and if the sender is an admin
       if (commandName === command.config.name.toLowerCase() && command.config.adminOnly && !isAdmin) {
         api.sendMessage("You do not have permission to use this command.", event.sender.id);
         continue;
       }
 
       if (command.config.name.toLowerCase() === commandName) {
-        const cooldownTime = command.config.cooldown || 0; // Default to 0 seconds if cooldown is not set
+        const cooldownTime = command.config.cooldown || 0;
         const userCooldown = cooldowns[event.sender.id] || {};
         const lastUsed = userCooldown[command.config.name] || 0;
         const now = Date.now();
 
-        // Check cooldown only if it's greater than 0
         if (cooldownTime > 0 && now - lastUsed < cooldownTime * 1000) {
           const remainingTime = Math.ceil((cooldownTime * 1000 - (now - lastUsed)) / 1000);
           api.sendMessage(`Please wait ${remainingTime} second(s) before using this command again.`, event.sender.id);
           return;
         }
 
-        // Update cooldown
         cooldowns[event.sender.id] = {
           ...userCooldown,
           [command.config.name]: now
@@ -95,3 +111,4 @@ module.exports = async function (event) {
     }
   }
 };
+
