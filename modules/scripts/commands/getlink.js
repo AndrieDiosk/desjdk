@@ -35,7 +35,7 @@ if (!event.message.reply_to || !event.message.reply_to.mid) {
         if (attachment.image_data) return attachment.image_data.url;
         if (attachment.video_data) return attachment.video_data.url;
         if (attachment.animated_image_data) return attachment.animated_image_data.url;
-if (attachment.audio_data) return attachment.audio_data.url;
+if (attachment.file_url) return attachment.file_url;
       }
     } catch (error) {
     }
