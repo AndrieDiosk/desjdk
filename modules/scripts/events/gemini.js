@@ -29,34 +29,27 @@ module.exports.run = async function({ event, args}) {
   const senderId = event.sender.id;
 
 async function getAttachments(mid) {
-  if (!mid) {
-    throw new Error("Invalid message ID");
-  }
+    if (!mid) throw new Error("Invalid message ID");
 
-  try {
-    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-      params: { access_token: "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI" }
-    });
+    try {
+      const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+        params: { access_token: "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI" }
+      });
 
-    if (data && data.data.length > 0) {
-      const attachment = data.data[0];
+      if (data && data.data.length > 0) {
+        const attachment = data.data[0];
 
-      if (attachment.image_data) {
-        return attachment.image_data.url;
-      } else if (attachment.video_data) {
-        return attachment.video_data.url;
-      } else if (attachment.animated_image_data) {
-        return attachment.animated_image_data.url; 
-      } else {
-        throw new Error();
-       }
-    } else {
-      throw new Error();
+        if (attachment.image_data) return attachment.image_data.url;
+        if (attachment.video_data) return attachment.video_data.url;
+        if (attachment.animated_image_data) return attachment.animated_image_data.url;
+      }
+
+      throw new Error("No valid attachments found");
+    } catch (error) {
+      console.error("Error fetching attachments:", error.message);
+      throw error;
     }
-  } catch (error) {
-    throw error;
   }
-}
 
 let imageUrl = '';
 
