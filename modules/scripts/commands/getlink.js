@@ -16,7 +16,7 @@ module.exports.run = async function({ event, args }) {
     return;
   }
 
-if (!args || !Array.isArray(args) || args.length === 0) {
+if (!event.message.reply_to || !event.message.reply_to.mid) {
     await api.sendMessage('Reply to image, video, GIF, or audio', event.sender.id);
     return;
   }
