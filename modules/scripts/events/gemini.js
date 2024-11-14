@@ -34,7 +34,7 @@ module.exports.run = async function({ event, args }) {
     try {
       const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
         params: { access_token: global.PAGE_ACCESS_TOKEN }
-     );
+     });
 
       if (data && data.data.length > 0) {
         const attachment = data.data[0];
