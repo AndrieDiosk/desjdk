@@ -1,4 +1,3 @@
-
 const axios = require('axios');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
@@ -12,6 +11,7 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
+
 module.exports.config = {
   name: 'gemini',
   author: 'Cliff',
@@ -20,7 +20,7 @@ module.exports.config = {
   selfListen: false,
 };
 
-module.exports.run = async function({ event, args}) {
+module.exports.run = async function({ event, args }) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     return;
   }
@@ -28,12 +28,21 @@ module.exports.run = async function({ event, args}) {
   const messageText = event.message.text;
   const senderId = event.sender.id;
 
+<<<<<<< HEAD
+  async function getAttachments(mid) {
+    if (!mid) return;
+
+    try {
+      const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+        params: { access_token: global.PAGE_ACCESS_TOKEN }
+=======
 async function getAttachments(mid) {
     if (!mid) throw new Error("Invalid message ID");
 
     try {
       const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
         params: { access_token: "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI" }
+>>>>>>> e3fec53a2bbfb9f7fdcfff6d8a0b5befcccbe3fa
       });
 
       if (data && data.data.length > 0) {
@@ -43,28 +52,32 @@ async function getAttachments(mid) {
         if (attachment.video_data) return attachment.video_data.url;
         if (attachment.animated_image_data) return attachment.animated_image_data.url;
       }
+<<<<<<< HEAD
+    } catch (error) {
+=======
 
       throw new Error("No valid attachments found");
     } catch (error) {
       console.error("Error fetching attachments:", error.message);
       throw error;
+>>>>>>> e3fec53a2bbfb9f7fdcfff6d8a0b5befcccbe3fa
     }
   }
 
-let imageUrl = '';
+  let imageUrl = '';
 
-if (event.message && event.message.attachments) {
+  if (event.message && event.message.attachments) {
     imageUrl = event.message.attachments[0].payload.url || null;
   }
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
-      imageUrl = await getAttachments(event.message.reply_to.mid, "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI");
+      imageUrl = await getAttachments(event.message.reply_to.mid);
     } catch (error) {
-      imageUrl = ''; 
+      console.error(error.message);
+      imageUrl = '';
     }
   }
-
 
 const god = "who is jesus?";
 const teach = "can you teach me";
@@ -101,18 +114,11 @@ const apis =  "what is your api?";
     apis !== messageText
   ) {
     try {
-      let text;
-      if (fileUrl) {
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}&imageUrl=${encodeURIComponent(imageUrl)}`;
-        const response = await axios.get(apiUrl, { headers });
-        text = response.data.response;
-      } else {
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}`;
-        const response = await axios.get(apiUrl, { headers });
-        text = response.data.response;
-      }
+      const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}`;
+      const image = imageUrl ? `&imageUrl=${encodeURIComponent(imageUrl)}` : '';
+      const response = await axios.get(apiUrl + image, { headers });
 
-      api.sendMessage(text, senderId);
+      api.sendMessage(response.data.response, senderId);
     } catch (error) {
       api.sendMessage(error, senderId);
     }
