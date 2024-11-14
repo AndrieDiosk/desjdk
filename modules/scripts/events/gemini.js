@@ -1,3 +1,4 @@
+
 const axios = require('axios');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
@@ -29,12 +30,12 @@ module.exports.run = async function({ event, args}) {
 
 async function getAttachments(mid) {
   if (!mid) {
-    throw new Error();
+    throw new Error("Invalid message ID");
   }
 
   try {
     const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-      params: { access_token: global.PAGE_ACCESS_TOKEN }
+      params: { access_token: "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI" }
     });
 
     if (data && data.data.length > 0) {
@@ -65,7 +66,7 @@ if (event.message && event.message.attachments) {
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
-      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+      imageUrl = await getAttachments(event.message.reply_to.mid, "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI");
     } catch (error) {
       imageUrl = ''; 
     }
