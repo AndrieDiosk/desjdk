@@ -42,6 +42,7 @@ module.exports.run = async function({ event, args }) {
         if (attachment.image_data) return attachment.image_data.url;
         if (attachment.video_data) return attachment.video_data.url;
         if (attachment.animated_image_data) return attachment.animated_image_data.url;
+        if (attachment.audio_data) return attachment.audio_data.url;
       }
     } catch (error) {
     }
@@ -90,6 +91,8 @@ const apis =  "what is your api?";
     !messageText.match(/^Music(\s+.+)?$/i) &&
     !messageText.match(/^shoti(\s+.+)?$/i) &&
     !messageText.match(/^Shoti(\s+.+)?$/i) &&
+    !messageText.match(/^getlink(\s+.+)?$/i) &&
+    !messageText.match(/^Getlink(\s+.+)?$/i) &&
     god !== messageText &&
     teach !== messageText &&
     intro !== messageText &&
