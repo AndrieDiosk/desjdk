@@ -20,8 +20,6 @@ if (!args || !Array.isArray(args) || args.length === 0) {
     await api.sendMessage('Reply to image, video, GIF, or audio', senderId);
     return;
   }
-  
-  const senderId = event.sender.id;
 
   async function getAttachments(mid) {
     if (!mid) return;
@@ -54,8 +52,8 @@ let imageUrl = '';
   }
 
   if (imageUrl) {
-    api.sendMessage(imageUrl, senderId);
+    api.sendMessage(imageUrl, event.sender.id);
   } else {
-    api.sendMessage("No valid attachment found.", senderId);
+    api.sendMessage("No valid attachment found.", event.sender.id);
   }
 };
