@@ -28,22 +28,13 @@ module.exports.run = async function({ event, args }) {
   const messageText = event.message.text;
   const senderId = event.sender.id;
 
-<<<<<<< HEAD
   async function getAttachments(mid) {
     if (!mid) return;
 
     try {
       const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
         params: { access_token: global.PAGE_ACCESS_TOKEN }
-=======
-async function getAttachments(mid) {
-    if (!mid) throw new Error("Invalid message ID");
-
-    try {
-      const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-        params: { access_token: "EAAGhpVPwmuMBO3zGzvCZBXo9KDHvX31DdDcQjvclPjKlFTcRFO3gyWr7xlSwlhkSUbJ04GkDhjzybc0whm1JgcBPEjXaIFHuPD81y11fSRP0RNn2w7XWQS7jHDugwLsjoRi3nrxBTUDZAuweWnsx6RwbfzpNdfYaWEFoBSXrkygrjmEsySyiWnZAvxIIBGI" }
->>>>>>> e3fec53a2bbfb9f7fdcfff6d8a0b5befcccbe3fa
-      });
+     );
 
       if (data && data.data.length > 0) {
         const attachment = data.data[0];
@@ -52,15 +43,7 @@ async function getAttachments(mid) {
         if (attachment.video_data) return attachment.video_data.url;
         if (attachment.animated_image_data) return attachment.animated_image_data.url;
       }
-<<<<<<< HEAD
     } catch (error) {
-=======
-
-      throw new Error("No valid attachments found");
-    } catch (error) {
-      console.error("Error fetching attachments:", error.message);
-      throw error;
->>>>>>> e3fec53a2bbfb9f7fdcfff6d8a0b5befcccbe3fa
     }
   }
 
