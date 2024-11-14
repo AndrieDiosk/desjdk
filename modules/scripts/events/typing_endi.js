@@ -16,7 +16,8 @@ module.exports.run = async function({ event }) {
     await api.graph({
       recipient: { id: event.sender.id },
       sender_action: 'typing_on'
-    });    
+    });
+    
     await api.graph({
       recipient: { id: event.sender.id },
       sender_action: 'typing_off'
