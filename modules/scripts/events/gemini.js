@@ -19,7 +19,7 @@ module.exports.config = {
   selfListen: false,
 };
 
-module.exports.run = async function({ event, args }) {
+module.exports.run = async function({ event, args}) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     return;
   }
@@ -27,14 +27,50 @@ module.exports.run = async function({ event, args }) {
   const messageText = event.message.text;
   const senderId = event.sender.id;
 
-  let fileUrl = '';
+async function getAttachments(mid) {
+  if (!mid) {
+    throw new Error();
+  }
 
-if (event?.type === 'message_reply' && event.message && event.message.reply_to && event.message.reply_to.mid && event.message.attachments && event.message.attachments[0].type === 'image') {
-  const attachment = event.message.attachments[0]?.payload?.url;
-  if (attachment) {
-    fileUrl = attachment;
+  try {
+    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+      params: { access_token: global.PAGE_ACCESS_TOKEN }
+    });
+
+    if (data && data.data.length > 0) {
+      const attachment = data.data[0];
+
+      if (attachment.image_data) {
+        return attachment.image_data.url;
+      } else if (attachment.video_data) {
+        return attachment.video_data.url;
+      } else if (attachment.animated_image_data) {
+        return attachment.animated_image_data.url; 
+      } else {
+        throw new Error();
+       }
+    } else {
+      throw new Error();
+    }
+  } catch (error) {
+    throw error;
   }
 }
+
+let imageUrl = '';
+
+if (event.message && event.message.attachments) {
+    imageUrl = event.message.attachments[0].payload.url || null;
+  }
+
+  if (event.message && event.message.reply_to && event.message.reply_to.mid) {
+    try {
+      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+    } catch (error) {
+      imageUrl = ''; 
+    }
+  }
+
 
 const god = "who is jesus?";
 const teach = "can you teach me";
@@ -73,18 +109,18 @@ const apis =  "what is your api?";
     try {
       let text;
       if (fileUrl) {
-        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${fileUrl}`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}&imageUrl=${encodeURIComponent(imageUrl)}`;
         const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
+        text = response.data.response;
       } else {
-        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}`;
         const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
+        text = response.data.response;
       }
 
       api.sendMessage(text, senderId);
     } catch (error) {
       api.sendMessage(error, senderId);
     }
-}
+  }
 };
