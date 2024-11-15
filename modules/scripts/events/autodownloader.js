@@ -30,9 +30,9 @@ if (!event || !event.sender || !event.message || !event.message.text || !event.s
   if (instagramLinkRegex.test(messageText)) {
     try {
       api.sendMessage("Downloading Instagram, please wait...", event.sender.id);
-      const apiUrl = `https://universaldownloader.zapto.org/download?url=${encodeURIComponent(messageText)}`;
+      const apiUrl = `https://yt-video-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl, { headers });
-      const videoUrl = response.data.result;
+      const videoUrl = response.data.result[0].url;
 
       const headResponse = await axios.head(videoUrl, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
