@@ -27,7 +27,7 @@ module.exports.run = async function ({ event }) {
                 },
                 {
                   type: 'postback',
-                  title: "Help",
+                  title: "help",
                   payload: "HELP_PAYLOAD"
                 }
               ]
@@ -36,7 +36,7 @@ module.exports.run = async function ({ event }) {
           quick_replies: [
             {
               content_type: "text",
-              title: "Help",
+              title: "help",
               payload: "HELP"
             },
             {
