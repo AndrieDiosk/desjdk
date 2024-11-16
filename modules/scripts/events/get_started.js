@@ -60,7 +60,7 @@ module.exports.run = async function ({ event }) {
     }
   }
 
-if (event.postback && event.postback.payload) {
+  if (event.postback && event.postback.payload) {
     handlePayload(event.postback.payload);
   }
 
@@ -69,7 +69,7 @@ if (event.postback && event.postback.payload) {
     get_started: { payload: "GET_STARTED_PAYLOAD" },
     greeting: [
       {
-        locale: "default",
+        locale: "en_US",
         text: "Hi {{user_first_name}}! I'm Tropp! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. What's on your mind today?"
       }
     ]

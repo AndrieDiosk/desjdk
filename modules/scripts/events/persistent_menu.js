@@ -20,9 +20,11 @@ module.exports.run = async function ({ event }) {
 
   commandFiles.forEach(file => {
     const command = require(path.join(commandsPath, file));
-    if (!commands.has(command.config.name)) {
-      commands.set(command.config.name, command);
-      commandList.push(command.config.name);
+    const commandName = command.config.name;
+
+    if (!commands.has(commandName)) {
+      commands.set(commandName, command);
+      commandList.push(commandName);
       descriptions.push(command.config.description || 'No description provided.');
     }
   });
@@ -46,7 +48,7 @@ async function updateMessengerCommands() {
 
     const existingCommands = dataCmd.data.data[0]?.commands || [];
 
-    if (existingCommands.length === commandsPayload.length && 
+    if (existingCommands.length === commandsPayload.length &&
         existingCommands.every((cmd, index) => cmd.name === commandsPayload[index].name)) {
       return;
     }
@@ -68,5 +70,6 @@ async function updateMessengerCommands() {
         },
       }
     );
-  } catch (error) {}
+  } catch (error) {
+  }
 }
