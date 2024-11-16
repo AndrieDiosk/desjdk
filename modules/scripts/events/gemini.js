@@ -110,11 +110,18 @@ const apis =  "what is your api?";
     apis !== messageText
   ) {
     try {
-      const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-pro-latest&uid=${senderId}&roleplay=you+are+Neko&google_api_key=`;
-      const image = imageUrl ? `&file_url=${encodeURIComponent(imageUrl)}` : '';
-      const response = await axios.get(apiUrl + image, { headers });
+let text;
+      if (imageUrl) {
+        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-pro-latest&uid=${senderId}&file_url=${fileUrl}`;
+        const response = await axios.get(apiUrl, { headers });
+        text = response.data.message;
+      } else {
+        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-pro-latest&uid=${senderId}`;
+        const response = await axios.get(apiUrl, { headers });
+        text = response.data.message;
+      }
 
-      api.sendMessage(response.data.message, senderId);
+      api.sendMessage(text, senderId);
     } catch (error) {
       api.sendMessage(error, senderId);
     }

@@ -35,9 +35,9 @@ module.exports.run = async function ({ event }) {
           },
           quick_replies: [
             {
-             content_type: "text",
-             title: "what is your api?",
-             payload: "WHAT_IS_YOUR_API?"
+              content_type: "text",
+              title: "what is your api?",
+              payload: "WHAT_IS_YOUR_API?"
             },
             {
               content_type: "text",
@@ -60,7 +60,7 @@ module.exports.run = async function ({ event }) {
     }
   }
 
-  if (event.postback && event.postback.payload) {
+if (event.postback && event.postback.payload) {
     handlePayload(event.postback.payload);
   }
 
@@ -75,11 +75,10 @@ module.exports.run = async function ({ event }) {
     ]
   };
 
-  axios.post(url, payload, {
-    headers: {  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3", "Content-Type": "application/json" }
-  })
-  .then(response => {
-  })
-  .catch(error => {
+  await axios.post(url, payload, {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+      "Content-Type": "application/json"
+    }
   });
 };
