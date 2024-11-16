@@ -15,16 +15,17 @@ module.exports.config = {
 };
 
 module.exports.run = async function ({ event }) {
-  const commandFiles = fs
-    .readdirSync(path.join(__dirname, '../commands'))
-    .filter(file => file.endsWith('.js'));
+  const commandsPath = path.join(__dirname, '../commands');
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
   commandFiles.forEach(file => {
-    const command = require(`../commands/${file}`);
-    commands.set(command.config.name, command);
-    const description = command.config.description || 'No description provided.';
-    commandList.push(command.config.name);
-    descriptions.push(description);
+    const command = require(path.join(commandsPath, file));
+    if (!commands.has(command.config.name)) {
+      commands.set(command.config.name, command);
+      const description = command.config.description || 'No description provided.';
+      commandList.push(command.config.name);
+      descriptions.push(description);
+    }
   });
 
   await updateMessengerCommands();
@@ -37,17 +38,14 @@ async function updateMessengerCommands() {
   }));
 
   try {
-    const dataCmd = await axios.get(
-      `https://graph.facebook.com/v21.0/me/messenger_profile`,
-      {
-        params: {
-          fields: 'commands',
-          access_token: `${global.PAGE_ACCESS_TOKEN}`,
-        },
-      }
-    );
+    const dataCmd = await axios.get('https://graph.facebook.com/v21.0/me/messenger_profile', {
+      params: {
+        fields: 'commands',
+        access_token: `${global.PAGE_ACCESS_TOKEN}`,
+      },
+    });
 
-    if (dataCmd.data.data[0]?.commands?.length === commandsPayload.length) {
+    if (dataCmd.data.data[0]?.commands.length === commandsPayload.length) {
       return;
     }
 
@@ -67,7 +65,5 @@ async function updateMessengerCommands() {
         },
       }
     );
-  } catch (error) {
-  }
+  } catch (error) {}
 }
-
