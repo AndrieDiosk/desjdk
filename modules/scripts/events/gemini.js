@@ -78,6 +78,10 @@ const apis =  "what is your api?";
     !soundcloudRegex.test(messageText) &&
     !capcutLinkRegex.test(messageText) &&
 !messageText.match(/^trans(\s+.+)?$/i) &&
+!messageText.match(/^humanize(\s+.+)?$/i) &&
+!messageText.match(/^Humanize(\s+.+)?$/i) &&
+!messageText.match(/^aidetect(\s+.+)?$/i) &&
+!messageText.match(/^Aidetect(\s+.+)?$/i) &&
 !messageText.match(/^Trans(\s+.+)?$/i) &&
 !messageText.match(/^blackbox(\s+.+)?$/i) &&
 !messageText.match(/^Blackbox(\s+.+)?$/i) &&
@@ -116,4 +120,3 @@ const apis =  "what is your api?";
     }
   }
 };
-
