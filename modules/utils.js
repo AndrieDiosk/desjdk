@@ -58,16 +58,8 @@ async function log(event) {
   }
 }
 
-function handlePayload(payload, senderId) {
-  if (payload === "GET_STARTED_PAYLOAD") {
-    api.sendMessage("Welcome! I'm here to help you.", senderId);
-    api.sendMessage("Type 'help' to see what I can do.", senderId);
-  }
-}
-
 
 module.exports = {
   log,
-  getEventType,
-  handlePayload
+  getEventType
 };

@@ -110,11 +110,11 @@ const apis =  "what is your api?";
     apis !== messageText
   ) {
     try {
-      const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}`;
-      const image = imageUrl ? `&imageUrl=${encodeURIComponent(imageUrl)}` : '';
+      const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-pro-latest&uid=${senderId}&roleplay=you+are+Neko&google_api_key=`;
+      const image = imageUrl ? `&file_url=${encodeURIComponent(imageUrl)}` : '';
       const response = await axios.get(apiUrl + image, { headers });
 
-      api.sendMessage(response.data.response, senderId);
+      api.sendMessage(response.data.message, senderId);
     } catch (error) {
       api.sendMessage(error, senderId);
     }
