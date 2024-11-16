@@ -69,7 +69,7 @@ if (event.postback && event.postback.payload) {
     get_started: { payload: "GET_STARTED_PAYLOAD" },
     greeting: [
       {
-        locale: "en_US",
+        locale: "default",
         text: "Hi {{user_first_name}}! I'm Tropp! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. What's on your mind today?"
       }
     ]
@@ -77,7 +77,6 @@ if (event.postback && event.postback.payload) {
 
   await axios.post(url, payload, {
     headers: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
       "Content-Type": "application/json"
     }
   });
