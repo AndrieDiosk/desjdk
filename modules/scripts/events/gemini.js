@@ -110,16 +110,16 @@ const apis =  "what is your api?";
     apis !== messageText
   ) {
     try {
-let text;
+     let text;
       if (imageUrl) {
-        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-pro-latest&uid=${senderId}&file_url=${fileUrl}`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}&imageUrl=${encodeURIComponent(imageUrl)}`;
         const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
+        text = response.data.response;
       } else {
         const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-pro-latest&uid=${senderId}`;
         const response = await axios.get(apiUrl, { headers });
         text = response.data.message;
-      }
+      } 
 
       api.sendMessage(text, senderId);
     } catch (error) {
