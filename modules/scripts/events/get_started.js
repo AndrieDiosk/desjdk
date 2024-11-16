@@ -36,8 +36,8 @@ module.exports.run = async function ({ event }) {
           quick_replies: [
             {
              content_type: "text",
-             title: "Can you tell me more about yourself?",
-             payload: "CAN_YOU_TELL_ME_MORE_ABOUT_YOURSELF?"
+             title: "what is your api?",
+             payload: "WHAT_IS_YOUR_API?"
             },
             {
               content_type: "text",
@@ -72,15 +72,11 @@ module.exports.run = async function ({ event }) {
         locale: "en_US",
         text: "Hi {{user_first_name}}! I'm Tropp! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. What's on your mind today?"
       }
-/**      {
-        locale: "en_US",
-        text: "Hi, {{user_first_name}}! We're glad to see you. Let us know how we can assist you today!" 
-      } **/
     ]
   };
 
   axios.post(url, payload, {
-    headers: { "Content-Type": "application/json" }
+    headers: {  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3", "Content-Type": "application/json" }
   })
   .then(response => {
   })
