@@ -1,12 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const axios = require('axios');
 const config = require("../config.json");
 const { getTheme } = require("../website/web.js");
-
-const commandList = [];
-const descriptions = [];
-const commands = new Map();
 const cooldowns = {};
 
 const bannedKeywords = [  'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
@@ -25,6 +20,10 @@ module.exports = async function (event) {
   const commandFiles = fs.readdirSync(modulesPath).filter(file => file.endsWith(".js"));
 
   const isAdmin = config.ADMINS.includes(event.sender.id);
+
+  if (event?.message?.is_echo) {
+    event.sender.id = event.recipient.id;
+  }
 
   const messageText = event.message?.text || event.postback?.title || "";
   const [rawCommandName, ...args] = messageText.split(" ");
@@ -111,58 +110,4 @@ module.exports = async function (event) {
       console.error(`Error executing event handler ${file}:`, error);
     }
   }
-
-  const commandsPath = path.join(__dirname, '../modules/scripts/commands');
-  const commandFiless = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-  commandFiless.forEach(file => {
-    const command = require(path.join(commandsPath, file));
-if (!commands.has(command.config.name)) {
-    commands.set(command.config.name, command);
-    const description = command.config.description || 'No description provided.';
-    commandList.push(command.config.name);
-    descriptions.push(description);
-     }
-  });
-
-  await updateMessengerCommands();
 };
-
-async function updateMessengerCommands() {
-  const commandsPayload = commandList.map((name, index) => ({
-    name,
-    description: descriptions[index],
-  }));
-
-  try {
-    const dataCmd = await axios.get('https://graph.facebook.com/v21.0/me/messenger_profile', {
-      params: {
-        fields: 'commands',
-        access_token: global.PAGE_ACCESS_TOKEN,
-      },
-    });
-
-    if (dataCmd.data.data[0]?.commands.length === commandsPayload.length) {
-      return;
-    }
-
-    await axios.post(
-      `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${global.PAGE_ACCESS_TOKEN}`,
-      {
-        commands: [
-          {
-            locale: 'default',
-            commands: commandsPayload,
-          },
-        ],
-      },
-      {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-  } catch (error) {
-  }
-}

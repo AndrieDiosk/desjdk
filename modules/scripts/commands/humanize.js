@@ -114,8 +114,7 @@ module.exports["run"] = async ({ event, args}) => {
       .join("");
   }
 
-  const kupal = `${formatFont("HUMANIZE TEXT")}:\n\n
-- ${result.message}\n\n`;
+  const kupal = `${formatFont("HUMANIZED TEXT")}:\n━━━━━━━━━━━━━━━━\n- ${result.message}\n\n`;
 
   api.sendMessage(kupal, event.sender.id);
 };
