@@ -27,7 +27,7 @@ module.exports.run = async function ({ event }) {
                 },
                 {
                   type: 'postback',
-                  title: "help",
+                  title: "Help",
                   payload: "HELP_PAYLOAD"
                 }
               ]
@@ -35,14 +35,24 @@ module.exports.run = async function ({ event }) {
           },
           quick_replies: [
             {
-              content_type: "text",
-              title: "help",
-              payload: "HELP"
+             content_type: "text",
+             title: "Can you tell me more about yourself?",
+             payload: "CAN_YOU_TELL_ME_MORE_ABOUT_YOURSELF?"
             },
             {
               content_type: "text",
               title: "who is jesus?",
               payload: "WHO_IS_JESUS?"
+            },
+            {
+              content_type: "text",
+              title: "can you teach me",
+              payload: "CAN_YOU_TEACH_ME"
+            },
+            {
+              content_type: "text",
+              title: "who is your owner?",
+              payload: "WHO_IS_YOUR_OWNER?"
             }
           ]
         }
@@ -70,7 +80,7 @@ module.exports.run = async function ({ event }) {
   };
 
   axios.post(url, payload, {
-    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3","Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" }
   })
   .then(response => {
   })
