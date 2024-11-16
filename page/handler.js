@@ -113,9 +113,9 @@ module.exports = async function (event) {
   }
 
   const commandsPath = path.join(__dirname, '../modules/scripts/commands');
-  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+  const commandFiless = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-  commandFiles.forEach(file => {
+  commandFiless.forEach(file => {
     const command = require(path.join(commandsPath, file));
     commands.set(command.config.name, command);
     const description = command.config.description || 'No description provided.';
