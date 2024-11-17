@@ -42,25 +42,20 @@ module.exports.run = async function({ event, args }) {
         if (attachment.image_data) return attachment.image_data.url;
         if (attachment.video_data) return attachment.video_data.url;
         if (attachment.animated_image_data) return attachment.animated_image_data.url;
-        if (attachment.audio_data) return attachment.audio_data.url;
+if (attachment.file_url) return attachment.file_url;
       }
     } catch (error) {
     }
   }
 
-  let imageUrl = '';
+let imageUrl = '';
 
   if (event.message && event.message.attachments) {
     imageUrl = event.message.attachments[0].payload.url || null;
   }
 
-  if (event.message && event.message.reply_to && event.message.reply_to.mid) {
-    try {
-      imageUrl = await getAttachments(event.message.reply_to.mid);
-    } catch (error) {
-      console.error(error.message);
-      imageUrl = '';
-    }
+  if (!imageUrl && event.message && event.message.reply_to && event.message.reply_to.mid) {
+    imageUrl = await getAttachments(event.message.reply_to.mid);
   }
 
 const god = "who is jesus?";
