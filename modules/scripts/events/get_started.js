@@ -70,7 +70,7 @@ module.exports.run = async function ({ event }) {
     greeting: [
       {
         locale: "en_US",
-        text: "Hi {{user_first_name}}! I'm Tropp! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. What's on your mind today?"
+        text: "Hi {{user_first_name}}! I'm Tropp, your friendly assistant. Ask me anything, and I'll be happy to help!"
       }
     ]
   };
