@@ -9,16 +9,16 @@ module.exports.config = {
 };
 
 module.exports.run = async function ({ event }) {
-  function handlePayload(payload) {
+  async function handlePayload(payload) {
     if (payload === "GET_STARTED_PAYLOAD") {
-      api.graph({
+      await api.graph({
         recipient: { id: event.sender.id },
         message: {
           attachment: {
             type: 'template',
             payload: {
               template_type: 'button',
-              text: "Hello, I'm Tropp! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. \n\nType 'help' below 👇 to see available commands",
+              text: "Hello, I'm Tropp! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving.\n\nType 'help' below 👇 to see available commands",
               buttons: [
                 {
                   type: 'web_url',
@@ -61,7 +61,7 @@ module.exports.run = async function ({ event }) {
   }
 
   if (event.postback && event.postback.payload) {
-    handlePayload(event.postback.payload);
+    await handlePayload(event.postback.payload);
   }
 
   const url = `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${global.PAGE_ACCESS_TOKEN}`;
@@ -75,9 +75,13 @@ module.exports.run = async function ({ event }) {
     ]
   };
 
-  await axios.post(url, payload, {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
+  try {
+    await axios.post(url, payload, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+  } catch (error) {
+    console.error('Error setting Messenger Profile:', error.response?.data || error.message);
+  }
 };
