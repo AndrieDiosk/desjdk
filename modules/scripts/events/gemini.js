@@ -112,11 +112,11 @@ const apis =  "what is your api?";
     try {
      let text;
       if (imageUrl) {
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}&imageUrl=${encodeURIComponent(imageUrl)}`;
+        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodedURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${encodedURIComponent(imageUrl)}`;
         const response = await axios.get(apiUrl, { headers });
-        text = response.data.response;
+        text = response.data.message;
       } else {
-        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-pro-latest&uid=${senderId}`;
+        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
         const response = await axios.get(apiUrl, { headers });
         text = response.data.message;
       } 
