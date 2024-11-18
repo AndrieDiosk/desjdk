@@ -9,7 +9,7 @@ module.exports.config = {
   cooldown: 1,
 };
 
-module.exports.run = async function({ event, api }) {
+module.exports.run = async function({ event }) {
   const links = [
     "https://i.imgur.com/uthREbe.mp4",
     "https://i.imgur.com/v4mLGte.mp4",
