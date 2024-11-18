@@ -51,7 +51,7 @@ async function getAttachments(mid, pageAccessToken) {
 
     try {
       const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-        params: { access_token: pageAccessToken }
+        params: { access_token: global.PAGE_ACCESS_TOKEN }
      });
 
       if (data && data.data.length > 0) {
@@ -74,7 +74,7 @@ if (event.message && event.message.attachments) {
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
-      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+      imageUrl = await getAttachments(event.message.reply_to.mid);
     } catch (error) {
       imageUrl = ''; 
     }
