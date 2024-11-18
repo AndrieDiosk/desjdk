@@ -69,7 +69,7 @@ module.exports.run = async function ({ event }) {
     get_started: { payload: "GET_STARTED_PAYLOAD" },
     greeting: [
       {
-        locale: "en_US",
+        locale: "default",
         text: "Hi {{user_first_name}}! I'm Tropp, your friendly assistant. Ask me anything, and I'll be happy to help!"
       }
     ]
@@ -82,6 +82,6 @@ module.exports.run = async function ({ event }) {
       }
     });
   } catch (error) {
-    console.error('Error setting Messenger Profile:', error.response?.data || error.message);
   }
 };
+

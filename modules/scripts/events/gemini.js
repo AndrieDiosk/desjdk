@@ -28,12 +28,30 @@ module.exports.run = async function({ event, args }) {
   const messageText = event.message.text;
   const senderId = event.sender.id;
 
-  async function getAttachments(mid) {
+async function getMessage(mid) {
+  return await new Promise(async (resolve, reject) => {
+    if (!mid) resolve(null);
+    await axios.get(`https://graph.facebook.com/v21.0/${mid}?fields=message&access_token=${global.PAGE_ACCESS_TOKEN}`).then(data => {
+      resolve(data.data.message);
+    }).catch(err => {
+      reject(err);
+    });
+  });
+}
+
+  let content = "";
+
+if (event.type === "message_reply" && event.message) {
+content = await getMessage(event.message.reply_to.mid);
+}
+const combinedContent = content ? `${messageText} ${content}` : messageText;
+
+async function getAttachments(mid, pageAccessToken) {
     if (!mid) return;
 
     try {
       const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-        params: { access_token: global.PAGE_ACCESS_TOKEN }
+        params: { access_token: pageAccessToken }
      });
 
       if (data && data.data.length > 0) {
@@ -42,7 +60,7 @@ module.exports.run = async function({ event, args }) {
         if (attachment.image_data) return attachment.image_data.url;
         if (attachment.video_data) return attachment.video_data.url;
         if (attachment.animated_image_data) return attachment.animated_image_data.url;
-if (attachment.file_url) return attachment.file_url;
+   if (attachment.file_url) return attachment.file_url;    
       }
     } catch (error) {
     }
@@ -50,13 +68,17 @@ if (attachment.file_url) return attachment.file_url;
 
 let imageUrl = '';
 
-  if (event.message && event.message.attachments) {
+if (event.message && event.message.attachments) {
     imageUrl = event.message.attachments[0].payload.url || null;
   }
 
-  if (!imageUrl && event.message && event.message.reply_to && event.message.reply_to.mid) {
-    imageUrl = await getAttachments(event.message.reply_to.mid);
-  }
+  if (event.message && event.message.reply_to && event.message.reply_to.mid) {
+    try {
+      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+    } catch (error) {
+      imageUrl = ''; 
+    }
+  }  
 
 const god = "who is jesus?";
 const teach = "can you teach me";
@@ -105,16 +127,15 @@ const apis =  "what is your api?";
     apis !== messageText
   ) {
     try {
-     let text;
-      if (imageUrl) {
-        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodedURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${encodedURIComponent(imageUrl)}`;
-        const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
-      } else {
-        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
-        const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
-      } 
+  let text;
+if (imageUrl) {
+const apiUrl = content
+  ? `https://haji-mix.onrender.com/google?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${encodeURIComponent(imageUrl)}`
+  : `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}`;
+
+const response = await axios.get(apiUrl, { headers });
+text = response.data.message;
+}
 
       api.sendMessage(text, senderId);
     } catch (error) {
@@ -122,3 +143,4 @@ const apis =  "what is your api?";
     }
   }
 };
+

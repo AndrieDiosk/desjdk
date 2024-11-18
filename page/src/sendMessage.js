@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 module.exports = function (event) {
-  return async function sendMessage(text, senderID) {
+  return function sendMessage(text, senderID) {
     const recipientID = senderID || event.senderID;
 
     function splitMessage(text) {
@@ -23,9 +23,47 @@ module.exports = function (event) {
       return messages;
     }
 
-    const messages = splitMessage(text);
+    function Graph(form, onSuccess, onError) {
+      axios
+        .post(
+          `https://graph.facebook.com/v20.0/me/messages?access_token=${global.PAGE_ACCESS_TOKEN}`,
+          form
+        )
+        .then((res) => onSuccess(res.data))
+        .catch((err) => onError(err.response ? err.response.data : err.message));
+    }
 
-    await axios.post(
+    function processMessages(messages, index, recipientID, done) {
+      if (index >= messages.length) {
+        axios.post(
+          "https://graph.facebook.com/v21.0/me/messages",
+          {
+            recipient: { id: event.sender.id },
+            sender_action: "typing_off",
+          },
+          {
+            params: { access_token: global.PAGE_ACCESS_TOKEN },
+          }
+        )
+          .then(() => done())
+          .catch(() => done());
+        return;
+      }
+
+      const form = {
+        recipient: { id: recipientID },
+        message: { text: messages[index] },
+        messaging_type: "RESPONSE",
+      };
+
+      Graph(
+        form,
+        () => processMessages(messages, index + 1, recipientID, done),
+        () => processMessages(messages, index + 1, recipientID, done)
+      );
+    }
+
+    axios.post(
       "https://graph.facebook.com/v21.0/me/messages",
       {
         recipient: { id: event.sender.id },
@@ -34,45 +72,11 @@ module.exports = function (event) {
       {
         params: { access_token: global.PAGE_ACCESS_TOKEN },
       }
-    );
-
-    const sendPromises = messages.map((message) => {
-      const form = {
-        recipient: { id: recipientID },
-        message: { text: message },
-        messaging_type: "RESPONSE",
-      };
-      return Graph(form);
-    });
-
-    try {
-      const results = await Promise.all(sendPromises);
-      await axios.post(
-        "https://graph.facebook.com/v21.0/me/messages",
-        {
-          recipient: { id: event.sender.id },
-          sender_action: "typing_off",
-        },
-        {
-          params: { access_token: global.PAGE_ACCESS_TOKEN },
-        }
-      );
-      return results;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    )
+      .then(() => {
+        const messages = splitMessage(text);
+        processMessages(messages, 0, recipientID, () => {});
+      })
+      .catch(() => {});
   };
-
-  function Graph(form) {
-    return axios
-      .post(
-        `https://graph.facebook.com/v20.0/me/messages?access_token=${global.PAGE_ACCESS_TOKEN}`,
-        form
-      )
-      .then((res) => res.data)
-      .catch((err) => {
-        throw err.response ? err.response.data : err.message;
-      });
-  }
 };
