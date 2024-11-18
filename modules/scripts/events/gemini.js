@@ -95,6 +95,8 @@ const apis =  "what is your api?";
     !soundcloudRegex.test(messageText) &&
     !capcutLinkRegex.test(messageText) &&
 !messageText.match(/^trans(\s+.+)?$/i) &&
+!messageText.match(/^random(\s+.+)?$/i) &&
+!messageText.match(/^Random(\s+.+)?$/i) &&
 !messageText.match(/^humanize(\s+.+)?$/i) &&
 !messageText.match(/^Humanize(\s+.+)?$/i) &&
 !messageText.match(/^aidetect(\s+.+)?$/i) &&
