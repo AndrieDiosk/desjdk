@@ -46,7 +46,7 @@ content = await getMessage(event.message.reply_to.mid);
 }
 const combinedContent = content ? `${messageText} ${content}` : messageText;
 
-async function getAttachments(mid, pageAccessToken) {
+async function getAttachments(mid) {
     if (!mid) return;
 
     try {
