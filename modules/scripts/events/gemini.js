@@ -51,7 +51,7 @@ async function getAttachments(mid) {
 
     try {
       const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-        params: { access_token: global.PAGE_ACCESS_TOKEN }
+        params: { access_token: global.PAGE_ACCESS_TOKEN}
      });
 
       if (data && data.data.length > 0) {
@@ -74,7 +74,7 @@ if (event.message && event.message.attachments) {
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
-      imageUrl = await getAttachments(event.message.reply_to.mid);
+      imageUrl = await getAttachments(event.message.reply_to.mid, `${global.PAGE_ACCESS_TOKEN}`);
     } catch (error) {
       imageUrl = ''; 
     }
@@ -128,19 +128,22 @@ const apis =  "what is your api?";
   ) {
     try {
   let text;
-if (imageUrl) {
-const apiUrl = content
-  ? `https://haji-mix.onrender.com/google?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${encodeURIComponent(imageUrl)}`
-  : `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}`;
+     if (imageUrl) {
+const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
+        const imgurLink = imgurResponse.data.uploaded.image;
+        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${imgurLink}`;
+        const response = await axios.get(apiUrl, { headers });
+        text = response.data.message;
+      } else {
+        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}`;
+        const response = await axios.get(apiUrl, { headers });
+        text = response.data.message;
+      } 
 
-const response = await axios.get(apiUrl, { headers });
-text = response.data.message;
-}
-
-      api.sendMessage(text, senderId);
+      api.sendMessage(text, event.sender.id);
     } catch (error) {
-      api.sendMessage(error, senderId);
+      api.sendMessage(error.message, event.sender.id);
     }
   }
 };
-
