@@ -11,6 +11,24 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
+const fontMapping = {
+    'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚',
+    'H': '𝗛', 'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡',
+    'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨',
+    'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
+    'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴',
+    'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻',
+    'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂',
+    'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇'
+};
+
+function convertToBold(text) {
+    return text.replace(/(?:\*\*(.*?)\*\*|## (.*?)|### (.*?))/g, (match, boldText, h2Text, h3Text) => {
+        const targetText = boldText || h2Text || h3Text;
+        return [...targetText].map(char => fontMapping[char] || char).join('');
+    });
+}
+
 
 module.exports.config = {
   name: 'gemini',
@@ -96,6 +114,8 @@ const apis =  "what is your api?";
     !capcutLinkRegex.test(messageText) &&
 !messageText.match(/^trans(\s+.+)?$/i) &&
 !messageText.match(/^random(\s+.+)?$/i) &&
+!messageText.match(/^count(\s+.+)?$/i) &&
+!messageText.match(/^Count(\s+.+)?$/i) &&
 !messageText.match(/^Random(\s+.+)?$/i) &&
 !messageText.match(/^humanize(\s+.+)?$/i) &&
 !messageText.match(/^Humanize(\s+.+)?$/i) &&
@@ -129,19 +149,19 @@ const apis =  "what is your api?";
     apis !== messageText
   ) {
     try {
-  let text;
-     if (imageUrl) {
+let text;
+    if (imageUrl) {
 const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
-        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${imgurLink}`;
+        const apiUrl = `https://api.kenliejugarap.com/pixtral-paid/?question=${encodeURIComponent(combinedContent)}&image_url=${imgurLink}`;
         const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
+        text = convertToBold(response.data.response);
       } else {
-        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}`;
-        const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
-      } 
+        const api = `https://api.kenliejugarap.com/ministral-8b-paid/?question=${encodeURIComponent(combinedContent)}`;
+        const response = await axios.get(api, { headers });
+        text = convertToBold(response.data.response);
+}
 
       api.sendMessage(text, event.sender.id);
     } catch (error) {
