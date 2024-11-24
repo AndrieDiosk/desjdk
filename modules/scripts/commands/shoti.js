@@ -11,10 +11,10 @@ module.exports.config = {
   cooldown: 5,
 };
 
-module.exports.run = async function({ event, args}) { 
+module.exports.run = async function({ event, args}) {
   const apiUrl = `https://betadash-shoti-yazky.vercel.app/shotizxx?apikey=shipazu`;
 
-  try {    
+  try {
     const response = await axios.get(apiUrl);
     const shotiUrl = response.data.shotiurl;
 
@@ -48,7 +48,18 @@ module.exports.run = async function({ event, args}) {
         }
       });
     } else {
-      await api.sendMessage("Sorry, no Shoti video found.", event.sender.id);
+      await api.graph({
+        recipient: { id: event.sender.id },
+        message: {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: "https://i.imgur.com/1bPqMvK.mp4",
+              is_reusable: true
+            }
+          }
+        }
+      });
     }
   } catch (error) {
     await api.sendMessage("Sorry, there was an error processing your request.", event.sender.id);
