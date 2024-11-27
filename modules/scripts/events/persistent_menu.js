@@ -32,7 +32,7 @@ module.exports.run = async function ({ event }) {
 };
 
 async function updateMessengerCommands() {
-  const commandsPayload = commandList.map((name, index) => ({
+  const commandsPayload = commandList.slice(0, 1).map((name, index) => ({
     name,
     description: descriptions[index],
   }));
