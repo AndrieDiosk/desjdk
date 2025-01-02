@@ -9,7 +9,7 @@ module.exports.config = {
   author: "Yan Maglinte",
   version: "1.0",
   category: "Media",
-  description: "",
+  description: "search music from YouTube",
   adminOnly: false, 
   usePrefix: false,
   cooldown: 5,

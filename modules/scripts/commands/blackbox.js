@@ -5,7 +5,7 @@ module.exports.config = {
   author: "Cliff",
   version: "1.0",
   category: "media",
-  description: "",
+  description: "Blackbox Large language model",
   adminOnly: false,
   usePrefix: false,
   cooldown: 5,
