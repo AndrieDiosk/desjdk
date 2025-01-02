@@ -1,8 +1,8 @@
 {
-  "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBO2LbxNFJZAtqRaC7j0Lgn8D7numswa4JzsHAHgTV9FaQm5pz0uL8MCetkmWeYoKnt9wPzRYD81VNZB3PzIuGptfx0xlh8P9QRmBsmZBSc0vZAAjEr1DyHpIjKKc0GZAm45fVr4wKvIzfDfUZADDH89u6smF1OV1ZCGigrzQOZBfQs5CGOz5Dednj",
-  "VERIFY_TOKEN": "kupal",
+  "PAGE_ACCESS_TOKEN": "", // accessToken of your pagebot
+  "VERIFY_TOKEN": "kupal", 
   "ADMINS": [
-    "25532987236345562"
+    "25532987236345562" // change the admin using id command
   ],
   "BOTNAME": "Tropp",
   "PREFIX": "/",
