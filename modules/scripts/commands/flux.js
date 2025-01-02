@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 module.exports.config = {
   name: "flux",
   author: "Yan Maglinte",
@@ -22,7 +24,10 @@ module.exports.run = async function ({ event, args }) {
   try {
     await api.sendMessage("֎ | Generating Please Wait....", senderId);
 
-    const apiUrl = `https://echavie3.nethprojects.workers.dev/flux?q=${encodeURIComponent(prompt)}`;
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/fluxv2?prompt=${encodeURIComponent(prompt)}`;
+
+const im = await axios.get(apiUrl);
+const yawa = im.data.imageUrl;
 
     await api.graph({
       recipient: { id: senderId },
@@ -30,7 +35,7 @@ module.exports.run = async function ({ event, args }) {
         attachment: {
           type: 'image',
           payload: {
-            url: apiUrl,
+            url: yawa,
             is_reusable: true
           }
         }

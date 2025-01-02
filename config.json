@@ -1,9 +1,9 @@
 {
-  "PAGE_ACCESS_TOKEN": "", 
-  "VERIFY_TOKEN": "kupal", 
+  "PAGE_ACCESS_TOKEN": "",
+  "VERIFY_TOKEN": "kupal",
   "ADMINS": [
     "25532987236345562",
-    "",
+    ""
   ],
   "BOTNAME": "Tropp",
   "PREFIX": "/",

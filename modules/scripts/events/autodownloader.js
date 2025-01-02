@@ -305,42 +305,39 @@ if (capcutLinkRegex.test(messageText)) {
   const capct = `https://betadash-search-download.vercel.app/capcutdl?link=${encodeURIComponent(messageText)}`;
 
   const response = await axios.get(capct, { headers });
-  const { title, description, digunakan, video_ori, author_profile, cover } = response.data.result;
+const { title, thumbnail, medias } = response.data;
 
-  const kupal = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻: ${description}\n𝗧𝗲𝗺𝗽𝗹𝗮𝘁𝗲-𝗨𝘀𝗲𝗱: ${digunakan}`;
-  api.sendMessage(kupal, event.sender.id);
+const kupal = `𝗧𝗶𝘁𝗹𝗲: ${title}`;
+api.sendMessage(kupal, event.sender.id);
 
-  const headResponseCapcut = await axios.head(video_ori, { headers });
+const videoOri = medias[0].url;
+const fileSizeCapcutt = medias[0].size;
+
+  const headResponseCapcut = await axios.head(videoOri, { headers });
   const fileSizeCapcut = parseInt(headResponseCapcut.headers['content-length'], 10);
 
   if (fileSizeCapcut > 25 * 1024 * 1024) {
     api.graph({
       recipient: { id: event.sender.id },
       message: {
-        attachment: {
-          type: "template",
-          payload: {
-            template_type: "generic",
-            elements: [
-              {
-                title: title,
-                image_url: cover,
-                subtitle: `Description: ${description} Used: ${digunakan}`,
-                default_action: {
+attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [
+            {
+              title: title,
+              image_url: thumbnail,
+              default_action: {
+                type: "web_url",
+                url: thumbnail,
+                webview_height_ratio: "tall"
+              },
+              buttons: [
+                {
                   type: "web_url",
-                  url: cover,
-                  webview_height_ratio: "tall"
-                },
-                buttons: [
-                  {
-                    type: "web_url",
-                    url: video_ori,
-                    title: "Download Video"
-                  },
-                  {
-                    type: "web_url",
-                    url: author_profile,
-                    title: "Author Profile"
+                  url: videoOri,
+                  title: "Download Video"
                   }
                 ]
               }
@@ -351,13 +348,13 @@ if (capcutLinkRegex.test(messageText)) {
     });
   } else {
     api.graph({
-      recipient: { id: event.sender.id },
-      message: {
-        attachment: {
-          type: 'video',
-          payload: {
-            url: video_ori,
-            is_reusable: true
+    recipient: { id: event.sender.id },
+    message: {
+      attachment: {
+        type: 'video',
+        payload: {
+          url: videoOri,
+          is_reusable: true
           }
         }
       }

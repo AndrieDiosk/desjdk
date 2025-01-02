@@ -28,17 +28,25 @@ module.exports.run = async function ({ event, args}) {
   }
 
   try {
-    const apiUrl = `https://dlvc.vercel.app/yt-audio?search=${encodeURIComponent(query)}`;
-    const response = await axios.get(apiUrl, { headers });
-    const { downloadUrl, title, time, thumbnail, views } = response.data;
+const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
+      const music = await axios.get(videoSearchUrl, { headers });
+      const mp3 = music.data[0];
 
-    if (!downloadUrl) {
+    const audioUrl = mp3.url;
+
+      const shesh = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(audioUrl)}`;
+      const response = await axios.get(shesh, { headers });
+      const { audio, title, thumbnail, duration } = response.data;
+
+ if (!audio) {
       await api.graph({
         recipient: { id: senderId },
         message: { text: `Sorry, no download link found for "${query}"` }
       });
       return;
     }
+
+
 
     await api.graph({
       recipient: { id: senderId },
@@ -51,7 +59,7 @@ module.exports.run = async function ({ event, args}) {
               {
                 title: title,
                 image_url: thumbnail,
-                subtitle: `Views: ${views} - Duration: ${time}`,
+                subtitle: `Duration: ${duration.label} (${duration.seconds}s)`,
                 default_action: {
                   type: "web_url",
                   url: thumbnail,
@@ -64,7 +72,7 @@ module.exports.run = async function ({ event, args}) {
       }
     });
 
-    const headResponse = await axios.head(downloadUrl, { headers });
+    const headResponse = await axios.head(audio, { headers });
     const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
     if (fileSize > 25 * 1024 * 1024) {
@@ -79,7 +87,7 @@ module.exports.run = async function ({ event, args}) {
               buttons: [
                 {
                   type: 'web_url',
-                  url: downloadUrl,
+                  url: audio,
                   title: 'Download URL'
                 }
               ]
@@ -94,7 +102,7 @@ module.exports.run = async function ({ event, args}) {
           attachment: {
             type: 'audio',
             payload: {
-              url: downloadUrl,
+              url: audio,
               is_reusable: true
             }
           }
@@ -108,3 +116,4 @@ module.exports.run = async function ({ event, args}) {
     });
   }
 };
+

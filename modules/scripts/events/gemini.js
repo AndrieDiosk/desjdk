@@ -154,15 +154,14 @@ let text;
 const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
-        const apiUrl = `https://api.kenliejugarap.com/pixtral-paid/?question=${encodeURIComponent(combinedContent)}&image_url=${imgurLink}`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&&imageUrl=${imgurLink}`;
         const response = await axios.get(apiUrl, { headers });
         text = convertToBold(response.data.response);
       } else {
-        const api = `https://api.kenliejugarap.com/ministral-8b-paid/?question=${encodeURIComponent(combinedContent)}`;
+        const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
         const response = await axios.get(api, { headers });
         text = convertToBold(response.data.response);
-}
-
+  }
       api.sendMessage(text, event.sender.id);
     } catch (error) {
       api.sendMessage(error.message, event.sender.id);
