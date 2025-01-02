@@ -51,6 +51,7 @@ let imageUrl = '';
 
 
   try {
+    await api.sendMessage("⌛ Enhancing image Please wait...", senderId);
 
     const apiUrl = `https://yt-video-production.up.railway.app/upscale?imageUrl=${encodeURIComponent(imageUrl)}`;
 
