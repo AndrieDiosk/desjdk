@@ -53,7 +53,7 @@ let imageUrl = '';
   try {
     await api.sendMessage("⌛ | Enhancing image Please Wait....", senderId);
 
-    const apiUrl = `https://betadash-api-swordslush.vercel.app/upscale?imageUrl==${encodeURIComponent(imageUrl)}`;
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/upscale?imageUrl=${encodeURIComponent(imageUrl)}`;
 
 const im = await axios.get(apiUrl);
 const yawa = im.data.imageUrl;
