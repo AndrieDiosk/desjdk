@@ -115,6 +115,8 @@ const apis =  "what is your api?";
 !messageText.match(/^trans(\s+.+)?$/i) &&
 !messageText.match(/^tempmail(\s+.+)?$/i) &&
 !messageText.match(/^Tempmail(\s+.+)?$/i) &&
+!messageText.match(/^imgen(\s+.+)?$/i) &&
+!messageText.match(/^Imgen(\s+.+)?$/i) &&
 !messageText.match(/^upscale(\s+.+)?$/i) &&
 !messageText.match(/^Upscale(\s+.+)?$/i) &&
 !messageText.match(/^random(\s+.+)?$/i) &&
@@ -172,3 +174,4 @@ const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURI
     }
   }
 };
+

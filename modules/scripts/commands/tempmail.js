@@ -23,7 +23,7 @@ module.exports.config = {
     cooldown: 5,
 };
 
-module.exports["run"] = async ({ api, event, args }) => {
+module.exports["run"] = async ({ event, args }) => {
     const senderId = event.sender.id;
 
     const sendMessage = (msg) => {
