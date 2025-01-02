@@ -1,8 +1,8 @@
 {
-  "PAGE_ACCESS_TOKEN": "", // accessToken of your pagebot
+  "PAGE_ACCESS_TOKEN": "", /** accessToken of your pagebot **/
   "VERIFY_TOKEN": "kupal", 
   "ADMINS": [
-    "25532987236345562" // change the admin using id command
+    "25532987236345562" /** change the admin using id command **/
   ],
   "BOTNAME": "Tropp",
   "PREFIX": "/",
