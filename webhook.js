@@ -17,6 +17,17 @@ module.exports.listen = function (event) {
           if (config.selfListen && event?.message?.is_echo) return;
           utils.log(event);
 
+          if (event.postback && event.postback.payload) {
+            const payload = event.postback.payload;
+
+            if (payload === "FEEDBACK_GOOD") {
+              await utils.handleFeedback(event, { feedback: "Good response" });
+              return;
+            } else if (payload === "FEEDBACK_BAD") {
+              await utils.handleFeedback(event, { feedback: "Bad response" });
+              return;
+            }
+
           require("./page/main")(event);
         });
       });
