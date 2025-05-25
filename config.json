@@ -1,16 +1,16 @@
 {
-  "PAGE_ACCESS_TOKEN": "",
-  "VERIFY_TOKEN": "kupal",
+  "PAGE_ACCESS_TOKEN": "EAAOgTbWfPRkBO0FPuCsETfgJlfZCTwoZBVx2V5MRG13UOeY6CF75HoIP3FhrxRil87IXqJdE2XyI1lbCZA5hfuWZCsLhEZAJl2uIJ4gXIMfYoLS3L9Xr35e7gTFT5r79uPDuVrovxMDy036o9PZBHZAmKLGEpLfxNYQd9TlLOJIQSu57C7ilDr7pqIIFiwZBo3IrUTzcCQt2niOTu9VNjyRkJAZDZD",
+  "VERIFY_TOKEN": "bano",
   "ADMINS": [
-    "25532987236345562",
+    "",
     ""
   ],
-  "BOTNAME": "Tropp",
-  "PREFIX": "/",
+  "BOTNAME": "Kazuma",
+  "PREFIX": ".",
   "THEME_SETUP": {
     "THEME": "Fiery",
-    "ADMIN": "Cliffvincentt",
-    "TITLE": "TROPP",
+    "ADMIN": "AndrieDioso",
+    "TITLE": "Kazuma",
     "HTML": [
       "#CE2F16",
       "#fe8916",
